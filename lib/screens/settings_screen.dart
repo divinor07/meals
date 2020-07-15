@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:meals/components/main_drawer.dart';
-import 'package:meals/models/settings.dart';
+
+import '../components/main_drawer.dart';
+import '../models/settings.dart';
 
 class SettingsScreen extends StatefulWidget {
+  final Settings settings;
   final Function(Settings) onSettingsChanged;
 
-  const SettingsScreen(this.onSettingsChanged);
+  const SettingsScreen(this.settings, this.onSettingsChanged);
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  var settings = Settings();
+  Settings settings;
+
+  @override
+  void initState() {
+    super.initState();
+    settings = widget.settings;
+  }
 
   Widget _createSwitch(
     String title,
@@ -20,15 +28,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     bool value,
     Function(bool) onChanged,
   ) {
-    return SwitchListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
-      value: value,
-      onChanged: (value) {
-        onChanged(value);
-        widget.onSettingsChanged(settings);
-      },
-    );
+    return SwitchListTile.adaptive(
+        title: Text(title),
+        subtitle: Text(subtitle),
+        value: value,
+        onChanged: (value) {
+          onChanged(value);
+          widget.onSettingsChanged(settings);
+        });
   }
 
   @override
@@ -36,7 +43,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Configurações'),
-        centerTitle: true,
       ),
       drawer: MainDrawer(),
       body: Column(
@@ -52,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: ListView(
               children: <Widget>[
                 _createSwitch(
-                  'Sem Glúten',
+                  'Sem Glutén',
                   'Só exibe refeições sem glúten!',
                   settings.isGlutenFree,
                   (value) => setState(() => settings.isGlutenFree = value),
@@ -77,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ],
             ),
-          ),
+          )
         ],
       ),
     );
